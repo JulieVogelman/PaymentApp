@@ -1,0 +1,34 @@
+This is a load test for the PaymentApp's main module. I grant it is different from a traditional load
+test in which the application is a separate executable from the test. One aspect of this that is
+different is that the concurrency is dictated by the test itself, not by the thing being tested
+(although, the thing being tested is meant to be thread safe).
+
+If I were to make this more similar to a traditional load test without using http, I would move the multithreading into the application itself, and I suppose I would try to imitate http in which clients each have a dedicated input/output stream, and the information about that input/output stream is provided as part of some single stream: so, perhaps some single file written by the test has line-delimited file paths representing files that are each owned by a separate client, which are written to both by the client and the application under test. Admittedly, what I did was simpler than that. :)
+
+
+How to run the test for 10 minutes:
+cd bin/test
+java -jar ./PaymentAppTest.jar 600
+
+The test will by default use the number of cores available to determine how many threads to use. Assessment of the resulting data occurs once the test is over and is output to "err.log" (in the top level directory).
+
+
+Software Design:
+PaymentSystem class is supposed to serve as the front end of the system. It enables access to Payments and Users.
+
+Design decisions made in the code:
+- I wanted to lock the least amount of data necessary at once while still keeping the system in an atomic state. I decided the best approach was to lock the two Users. In order to prevent deadlock, I always locked them in order of their account number.
+- To prevent confusion, I kept locking only in the PaymentSystem class (as opposed to locking in the User and Payment classes). The User and Payment classes meanwhile have methods that are only mutable within the package itself, to control access.
+- The User class stores unfulfilled payments as a hash set to allow quick access to them.
+- The User class stores fulfilled payments as a time-ordered tree map to enable quick access to recent payments. (LinkedHashMap would have been another option I suppose)
+
+
+The test currently calls the various interface methods of the PaymentSystem and whenever payments are requested and fulfilled it updates local state in the form of a TestUser. At the completion of the test it goes through all of the TestUsers to verify they agree with the Users.
+
+Further enhancements of the test would be verification that 1) payments get fulfilled when users have sufficient balances and fail otherwise; 2) the recent payments retrieved are correct. Also, the worker threads could be sharing a queue of unfulfilled payments that they work on together to further test out the correctness of the underlying concurrency. 
+
+
+What I'd do if I had more time:
+- An http interface would not be exposing Payment and User objects but rather IDs for them. Perhaps this should do the same.
+- I have not robustly checked for bad input across the application. 
+  
