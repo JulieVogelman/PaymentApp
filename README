@@ -22,7 +22,7 @@ Design decisions made in the code:
 - To prevent confusion, I kept locking only in the PaymentSystem class (as opposed to locking in the User and Payment classes). The User and Payment classes meanwhile have methods that are only mutable within the package itself, to control access.
 - The User class stores unfulfilled payments as a hash set to allow quick access to them.
 - The User class stores fulfilled payments as a time-ordered tree map to enable quick access to recent payments. (LinkedHashMap would have been another option I suppose)
-- Null input verified only in methods accessible within the module.
+- Null input verified only in methods accessible outside the module.
 
 
 The test currently calls the various interface methods of the PaymentSystem and whenever payments are requested and fulfilled it updates local state in the form of a TestUser. At the completion of the test it goes through all of the TestUsers to verify they agree with the Users.
