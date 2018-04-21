@@ -10,7 +10,7 @@ How to run the test for 10 minutes:
 cd bin/test
 java -jar ./PaymentAppTest.jar 600
 
-The test will by default use the number of cores available to determine how many threads to use. Assessment of the resulting data occurs once the test is over and is output to "err.log" (in the top level directory).
+The test will by default use the number of cores available to determine how many threads to use. Assessment of the resulting data occurs once the test is over and is output to "err.log" (in current directory).
 
 
 Software Layout:
