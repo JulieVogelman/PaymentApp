@@ -35,6 +35,7 @@ public class User {
 	// Unfulfilled payments, both PaymentSystem.OUTgoing and incoming (2-dim array for PaymentSystem.OUT/IN)
 	private ArrayList< HashSet<Payment> > _unfulfilledPayments; 
 	
+	
 	// purge payments after they've reached a certain limit
 	private static final int MAX_PAYMENTS_MAINTAINED = 10;
 	

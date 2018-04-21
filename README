@@ -13,14 +13,16 @@ java -jar ./PaymentAppTest.jar 600
 The test will by default use the number of cores available to determine how many threads to use. Assessment of the resulting data occurs once the test is over and is output to "err.log" (in the top level directory).
 
 
-Software Design:
+Software Layout:
 PaymentSystem class is supposed to serve as the front end of the system. It enables access to Payments and Users.
+
 
 Design decisions made in the code:
 - I wanted to lock the least amount of data necessary at once while still keeping the system in an atomic state. I decided the best approach was to lock the two Users. In order to prevent deadlock, I always locked them in order of their account number.
 - To prevent confusion, I kept locking only in the PaymentSystem class (as opposed to locking in the User and Payment classes). The User and Payment classes meanwhile have methods that are only mutable within the package itself, to control access.
 - The User class stores unfulfilled payments as a hash set to allow quick access to them.
 - The User class stores fulfilled payments as a time-ordered tree map to enable quick access to recent payments. (LinkedHashMap would have been another option I suppose)
+- Null input verified only in methods accessible within the module.
 
 
 The test currently calls the various interface methods of the PaymentSystem and whenever payments are requested and fulfilled it updates local state in the form of a TestUser. At the completion of the test it goes through all of the TestUsers to verify they agree with the Users.
@@ -29,6 +31,7 @@ Further enhancements of the test would be verification that 1) payments get fulf
 
 
 What I'd do if I had more time:
-- An http interface would not be exposing Payment and User objects but rather IDs for them. Perhaps this should do the same.
-- I have not robustly checked for bad input across the application. 
+- An http interface would not be exposing Payment and User objects but rather IDs for them. Perhaps this should do the same. The PaymentSystem is in fact currently not what's storing the Users, but it probably should be.
+- Further enhancements of the test as listed above
+- Additional functionality of the PaymentSystem such as querying for unfulfilled payments of a given user. 
   
