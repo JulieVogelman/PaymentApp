@@ -16,10 +16,6 @@ import java.util.List;
 
 public class PaymentSystem {
 	
-
-	//static public final int OUT = 0;
-	//static public final int IN = 1;
-	
 	
 	public User addUser(int accountNumber, BigDecimal balance) {
 		// future enhancements: maintain a structure with all users, verify uniqueness of account number
@@ -27,6 +23,10 @@ public class PaymentSystem {
 	}
 	
 	public Payment requestPayment(BigDecimal amount, User from, User to) {
+		if (amount == null || from == null || to == null) {
+			throw new RuntimeException("null input to requestPayment() method");
+		}
+		
 		int fromAcct = from.getAccountNumber();
 		int toAcct = to.getAccountNumber();
 		if (fromAcct == toAcct) { 
@@ -36,9 +36,6 @@ public class PaymentSystem {
 		
 		// lock Users in specific order to avoid deadlock
 		User[] userOrder = getLockOrder(payment.from(), payment.to());
-		if (userOrder.length != 2) { 
-			throw new RuntimeException("userOrder array has invalid length " + userOrder.length); 
-		}
 		
 		synchronized (userOrder[0]) {
 			synchronized (userOrder[1]) {
@@ -50,6 +47,9 @@ public class PaymentSystem {
 	}
 	
 	public boolean fulfill(Payment payment) {
+		if (payment == null) {
+			throw new RuntimeException("invalid parameter, payment=null");
+		}
 		if (payment.isFulfilled()) {
 			throw new RuntimeException("payment already fulfilled ");
 		}
@@ -70,6 +70,9 @@ public class PaymentSystem {
 	}
 	
 	public BigDecimal getUnfulfilledAmt(User user, Direction direction) {
+		if (user == null || direction == null) {
+			throw new RuntimeException("invalid null input");
+		}
 		synchronized (user) {
 			return user.getSumUnfulfilled(direction);
 		}
@@ -77,12 +80,18 @@ public class PaymentSystem {
 	
 	
 	Collection<Payment> getRecentPayments(User user, Direction direction) {
+		if (user == null || direction == null) {
+			throw new RuntimeException("invalid null input");
+		}
 		synchronized (user) {
 			return user.getRecentPayments(direction);
 		}
 	}
 	
 	Collection<Payment> getRecentPayments(User user, Direction direction, Date startingWith) {
+		if (user == null || direction == null || startingWith == null) {
+			throw new RuntimeException("invalid null input");
+		}
 		synchronized (user) {
 			return user.getRecentPayments(direction, startingWith);
 		}

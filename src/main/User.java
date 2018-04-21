@@ -45,6 +45,9 @@ public class User {
 	}
 	
 	public User(int accountNumber, BigDecimal balance) {
+		if (balance == null) {
+			throw new RuntimeException("null parameter in User constructor");
+		}
 		_accountNumber = accountNumber;
 		_balance = balance;
 		
@@ -99,11 +102,17 @@ public class User {
 	}
 	
 	public Collection<Payment> getRecentPayments(Direction direction) {
+		if (direction == null) {
+			throw new RuntimeException("null parameter in User.getRecentPayments");
+		}
 		TreeMap<Date, Payment> fulfilledPayments = _fulfilledPayments.get(direction._val);
 		return fulfilledPayments.values();
 	}
 	
 	public Collection<Payment> getRecentPayments(Direction direction, Date startingWith) {
+		if (direction == null || startingWith == null) {
+			throw new RuntimeException("null parameter in User.getRecentPayments");
+		}
 		if (_fulfilledPayments.size() == 0) {
 			return new LinkedList<Payment>();
 		}
