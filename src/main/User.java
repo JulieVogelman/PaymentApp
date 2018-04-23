@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+
 public class User {
 	private int _accountNumber;
 	public int getAccountNumber() {
@@ -56,11 +57,11 @@ public class User {
 		_sumUnfulfilled[Direction.OUT._val] = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);
 		_sumUnfulfilled[Direction.IN._val] = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);
 
-		_fulfilledPayments = new ArrayList<TreeMap<Date, Payment>>();
+		_fulfilledPayments = new ArrayList<TreeMap<Date, Payment>>(2);
 		_fulfilledPayments.add(new TreeMap<Date, Payment>()); // OUT (outgoing payments)
 		_fulfilledPayments.add(new TreeMap<Date, Payment>()); // IN (incoming payments)
 		
-		_unfulfilledPayments = new ArrayList< HashSet<Payment> >();
+		_unfulfilledPayments = new ArrayList< HashSet<Payment> >(2);
 		_unfulfilledPayments.add(new HashSet<Payment>()); // OUT
 		_unfulfilledPayments.add(new HashSet<Payment>()); // IN
 	}
