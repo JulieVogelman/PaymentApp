@@ -1,9 +1,9 @@
-This is a load test for the PaymentApp's main module. I grant it is different from a traditional load
-test in which the application is a separate executable from the test. One aspect of this that is
-different is that the concurrency is dictated by the test itself, not by the thing being tested
+This is a load test for the PaymentApp's main module. I grant it is different from a traditional load test in which the application is a separate executable from the test. One aspect of this that is different is that the concurrency is dictated by the test itself, not by the thing being tested
 (although, the thing being tested is meant to be thread safe).
 
-If I were to make this more similar to a traditional load test without using http, I would move the multithreading into the application itself, and I suppose I would try to imitate http in which clients each have a dedicated input/output stream, and the information about that input/output stream is provided as part of some single stream: so, perhaps some single file written by the test has line-delimited file paths representing files that are each owned by a separate client, which are written to both by the client and the application under test. Admittedly, what I did was simpler than that. :)
+Ideally, if given more time I would convert this into an http application with separate test harness. 
+
+If I were to make this more similar to a traditional load test without using http (which I only mention because some thought that I would have gone this route), I would move the multithreading into the application itself, and I suppose I would try to imitate http in which clients each have a dedicated input/output stream, and the information about that input/output stream is provided as part of some single stream: so, perhaps some single file written by the test has line-delimited file paths representing files that are each owned by a separate client, which are written to both by the client and the application under test. This is complicated enough that maybe producing an http application would be simpler? :)
 
 
 How to run the test for 10 minutes:
@@ -31,7 +31,8 @@ Further enhancements of the test would be verification that 1) payments get fulf
 
 
 What I'd do if I had more time:
-- An http interface would not be exposing Payment and User objects but rather IDs for them. Perhaps this should do the same. The PaymentSystem is in fact currently not what's storing the Users, but it probably should be.
+- An http interface and separate test harness
+- If not an http interface then something that's at least a step closer. An http interface would not be exposing Payment and User objects but rather IDs for them. Perhaps this should do the same. The PaymentSystem is in fact currently not what's storing the Users, but it probably should be.
 - Further enhancements of the test as listed above
 - Additional functionality of the PaymentSystem such as querying for unfulfilled payments of a given user. 
   
